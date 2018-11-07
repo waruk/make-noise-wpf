@@ -2,9 +2,7 @@
  * 
  * Configurable sound library: check if media file is available at startup
  * Timer interval needs to be random intre 1h - 1h30
- * On timer elapse check if current time is in noise making interval
  * play just a predefined length of the audio file (10 secs)
- * Log file (later replaced by web api): ora la care a apelat play, media ended, stop
  * 
  * 
  * Sounds to play: starship, train, icebraker, youtube creator sound effects
@@ -18,9 +16,11 @@
  * */
 
 using System;
+using System.Configuration;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Threading;
+using NLog;
 
 namespace Noise
 {
@@ -34,6 +34,8 @@ namespace Noise
         private const int PLAY_DURATION = 60;
 
         private static Random rnd = new Random();
+        // initialise logger
+        private static Logger logger = LogManager.GetCurrentClassLogger();
 
         // controls when media is played
         private DispatcherTimer playIntervalTimer = new DispatcherTimer();
@@ -44,9 +46,23 @@ namespace Noise
         private MediaPlayer mediaPlayer = new MediaPlayer();
         private bool isMediaPlaying;
 
+        QuietTime quietHours;
+
         public MainWindow()
         {
             InitializeComponent();
+            
+            logger.Info("App started.");
+            try
+            {
+                TimeSpan quietTimeFrom = TimeSpan.Parse(ConfigurationManager.AppSettings["QuietHoursFrom"]);
+                TimeSpan quietTimeTo = TimeSpan.Parse(ConfigurationManager.AppSettings["QuietHoursTo"]);
+                quietHours = new QuietTime(quietTimeFrom, quietTimeTo);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Quiet time interval is not valid.");
+            }
 
             mediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
             mediaPlayer.Volume = 1;
@@ -62,13 +78,22 @@ namespace Noise
 
         private void playIntervalTimer_Tick(object sender, EventArgs e)
         {
+            // check if we're allowed to play
+            DateTime currentTime = DateTime.Now;
+            if (quietHours.IsInsideQuietTimeInterval(currentTime))
+            {
+                logger.Info("Inside quiet hours interval. Keep quiet!");
+                return;
+            }
+
             if (!isMediaPlaying)
             {
                 mediaPlayer.Open(new Uri(SOUND1, UriKind.Relative));
                 
                 mediaPlayer.Play();
                 isMediaPlaying = true;
-                
+                logger.Info("Media started playing.");
+
                 playDurationTimer.Start();
             }
         }
@@ -79,12 +104,14 @@ namespace Noise
             {
                 mediaPlayer.Stop();
                 isMediaPlaying = false;
+                logger.Info("Media was stopped because max play length elapsed.");
             }
             ResetPlayInterval();
         }
 
         private void MediaPlayer_MediaEnded(object sender, EventArgs e)
         {
+            logger.Info("Media ended.");
             isMediaPlaying = false;
             ResetPlayInterval();
         }
@@ -93,6 +120,7 @@ namespace Noise
         {
             playIntervalTimer.Interval = TimeSpan.FromSeconds(10);
             playDurationTimer.Stop();
+            logger.Info("Media will be started again after 10 seconds.");
         }
 
         private TimeSpan GetNextPlayTime()
@@ -106,9 +134,13 @@ namespace Noise
         // clean up when shutting down the app
         private void Window_Closed(object sender, EventArgs e)
         {
+            logger.Info("App is shutting down.");
+
             mediaPlayer.MediaEnded -= MediaPlayer_MediaEnded;
             playIntervalTimer.Tick -= playIntervalTimer_Tick;
             playDurationTimer.Tick -= playDurationTimer_Tick;
+
+            LogManager.Shutdown(); // Flush and close down internal threads and timers
         }
     }
 }
