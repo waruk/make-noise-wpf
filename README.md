@@ -1,4 +1,1 @@
-TODO
-- add Nlog
-- add webapi ControlCenter project
-- etc.
+The description of this project goes here
