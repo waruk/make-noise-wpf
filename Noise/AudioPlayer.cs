@@ -7,23 +7,21 @@ namespace Noise
 {
     public class AudioPlayer : IDisposable
     {
-        private const string SOUND_LIB_DIR = @".\Sounds";
+        public QuietTime QuietHours { get; set; }
+
         private const string SOUND1 = @".\Sounds\Icebraker.mp3";
         private const int PLAY_DURATION = 60;
 
         private static Random rnd = new Random();
         private static Logger logger = LogManager.GetCurrentClassLogger();
+        private MediaPlayer mediaPlayer = new MediaPlayer();
+        private bool isMediaPlaying;
 
         // controls when media is played
         private DispatcherTimer playIntervalTimer = new DispatcherTimer();
 
         // controls how much of the media is played
         private DispatcherTimer playDurationTimer = new DispatcherTimer();
-
-        private MediaPlayer mediaPlayer = new MediaPlayer();
-        private bool isMediaPlaying;
-
-        public QuietTime QuietHours { get; set; }
 
         public void Start()
         {

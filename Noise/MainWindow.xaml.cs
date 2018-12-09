@@ -27,6 +27,8 @@ namespace Noise
     /// </summary>
     public partial class MainWindow : Window
     {
+        private const string SOUND_LIB_DIR = @".\Sounds";
+
         // initialise logger
         private static Logger logger = LogManager.GetCurrentClassLogger();
         private AudioPlayer audioPlayer;

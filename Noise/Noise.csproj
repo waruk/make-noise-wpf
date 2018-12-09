@@ -65,8 +65,6 @@
     </ApplicationDefinition>
     <Compile Include="NoiseConfiguration.cs" />
     <Compile Include="QuietTime.cs" />
-    <Compile Include="Sound.cs" />
-    <Compile Include="SoundLibrary.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -128,7 +126,7 @@
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
-    <Content Include="Sounds\Icebraker.mp3">
+    <Content Include="Sounds\icebraker.mp3">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

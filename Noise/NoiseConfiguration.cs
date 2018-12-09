@@ -6,6 +6,6 @@ namespace Noise
     {
         QuietTime quietHours { get; set; }
         int PlayDuration { get; set; }
-        Sound MediaFile { get; set; }
+        Uri MediaFile { get; set; }
     }
 }
