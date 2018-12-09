@@ -6,11 +6,18 @@
         xmlns:local="clr-namespace:Noise"
         mc:Ignorable="d"
         Title="MainWindow" Height="350" Width="525" Closed="Window_Closed">
+    <Window.Resources>
+        <Image x:Key="StartButton" Source=".\images\play-button.png" />
+        <Image x:Key="StopButton" Source=".\images\stop-button.png" />
+    </Window.Resources>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="2*" />
             <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
-        
+        <Button Name="btnStartPlayer" Grid.Column="0" 
+                Height="75" Width="75"
+                Content="{StaticResource StartButton}" 
+                Click="BtnStartPlayer_Click" />
     </Grid>
 </Window>
