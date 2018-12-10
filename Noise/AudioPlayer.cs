@@ -7,11 +7,7 @@ namespace Noise
 {
     public class AudioPlayer : IDisposable
     {
-        public QuietTime QuietHours { get; set; }
-
-        private const string SOUND1 = @".\Sounds\icebraker.mp3";
-        private const int PLAY_DURATION = 60;
-
+        private PlayerConfiguration config { get; set; }
         private static Random rnd = new Random();
         private static Logger logger = LogManager.GetCurrentClassLogger();
         private MediaPlayer mediaPlayer = new MediaPlayer();
@@ -23,16 +19,18 @@ namespace Noise
         // controls how much of the media is played
         private DispatcherTimer playDurationTimer = new DispatcherTimer();
 
-        public void Start()
+        public void Start(PlayerConfiguration config)
         {
+            this.config = config;
+
             mediaPlayer.MediaEnded += MediaPlayer_MediaEnded;
             mediaPlayer.Volume = 1;
 
             playDurationTimer.Tick += playDurationTimer_Tick;
-            playDurationTimer.Interval = TimeSpan.FromSeconds(PLAY_DURATION);
+            playDurationTimer.Interval = TimeSpan.FromSeconds(this.config.PlayTime);
 
             playIntervalTimer.Tick += playIntervalTimer_Tick;
-            playIntervalTimer.Interval = TimeSpan.FromSeconds(5);
+            playIntervalTimer.Interval = TimeSpan.FromSeconds(3);  // start to play immediately so we can test the sound volume
             playIntervalTimer.Start();
         }
 
@@ -43,22 +41,18 @@ namespace Noise
 
             // check if we're allowed to play
             DateTime currentTime = DateTime.Now;
-            if (QuietHours.IsInsideQuietTimeInterval(currentTime))
+            if (config.QuietHours.IsInsideQuietTimeInterval(currentTime))
             {
                 logger.Info("Inside quiet hours interval. Keep quiet!");
                 return;
             }
 
-            if (!isMediaPlaying)
-            {
-                mediaPlayer.Open(new Uri(SOUND1, UriKind.Relative));
+            mediaPlayer.Open(config.AudioFile);
+            mediaPlayer.Play();
+            isMediaPlaying = true;
+            logger.Info("Media started playing.");
 
-                mediaPlayer.Play();
-                isMediaPlaying = true;
-                logger.Info("Media started playing.");
-
-                playDurationTimer.Start();
-            }
+            playDurationTimer.Start();
         }
 
         private void playDurationTimer_Tick(object sender, EventArgs e)
@@ -84,12 +78,12 @@ namespace Noise
             playIntervalTimer.Interval = GetNextPlayTime()
 ;
             playDurationTimer.Stop();
-            logger.Info(String.Format("Media will be started again after {0} minutes.", playIntervalTimer.Interval.TotalMinutes.ToString()));
+            logger.Info(String.Format("Play again in [{0}] minutes.", playIntervalTimer.Interval.TotalMinutes.ToString()));
         }
 
         private TimeSpan GetNextPlayTime()
         {
-            int minutes = rnd.Next(35, 91);
+            int minutes = rnd.Next(config.PlayAgainAfterMin, config.PlayAgainAfterMax);
             TimeSpan timeBetweenMediaPlay = TimeSpan.FromMinutes(minutes);
 
             return timeBetweenMediaPlay;

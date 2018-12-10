@@ -26,7 +26,7 @@ namespace Noise
     /// </summary>
     public partial class MainWindow : Window
     {
-        private const string SOUND_LIB_DIR = @".\Sounds";
+        private const string SOUND_LIB_DIR = @".\Sounds\";
 
         // initialise logger
         private static Logger logger = LogManager.GetCurrentClassLogger();
@@ -53,29 +53,21 @@ namespace Noise
                 return;
             }
 
-            audioPlayer = new AudioPlayer();
-
             try
             {
-                TimeSpan quietTimeFrom = TimeSpan.Parse(ConfigurationManager.AppSettings["QuietHoursFrom"]);
-                TimeSpan quietTimeTo = TimeSpan.Parse(ConfigurationManager.AppSettings["QuietHoursTo"]);
-                audioPlayer.QuietHours = new QuietTime(quietTimeFrom, quietTimeTo);
+                PlayerConfiguration config = LoadPlayerConfiguration();
 
-                audioPlayer.Start();
+                audioPlayer = new AudioPlayer();
+                audioPlayer.Start(config);
                 logger.Info("Audio player started");
 
                 isPlayerStarted = true;
                 btnStartPlayer.Content = FindResource("StopButton");
             }
-            catch (ArgumentException ex)
-            {
-                logger.Error(ex, "Quiet time interval is not valid.");
-                MessageBox.Show("Quiet time interval is not valid.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-            }
             catch (Exception ex)
             {
-                logger.Error(ex);
-                MessageBox.Show("An unknown error has occurred.", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                logger.Error(ex, "Configuration error.");
+                MessageBox.Show(ex.Message, "Configuration error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
@@ -86,6 +78,24 @@ namespace Noise
             if (audioPlayer != null)
                 audioPlayer.Dispose();
             LogManager.Shutdown(); // Flush and close down internal threads and timers
+        }
+
+        private PlayerConfiguration LoadPlayerConfiguration()
+        {
+            PlayerConfiguration playerConfiguration = new PlayerConfiguration();
+            
+            TimeSpan quietTimeFrom = TimeSpan.Parse(ConfigurationManager.AppSettings["QuietHoursFrom"]);
+            TimeSpan quietTimeTo = TimeSpan.Parse(ConfigurationManager.AppSettings["QuietHoursTo"]);
+            playerConfiguration.QuietHours = new QuietTime(quietTimeFrom, quietTimeTo);
+
+            playerConfiguration.PlayAgainAfterMin = Int32.Parse(ConfigurationManager.AppSettings["MinValue"]);
+            playerConfiguration.PlayAgainAfterMax = Int32.Parse(ConfigurationManager.AppSettings["MaxValue"]);
+            playerConfiguration.PlayTime = Int32.Parse(ConfigurationManager.AppSettings["PlayTime"]);
+            playerConfiguration.AudioFile = new Uri(SOUND_LIB_DIR + ConfigurationManager.AppSettings["Filename"], UriKind.Relative);
+
+            logger.Info("Configuration loaded from file.");
+
+            return playerConfiguration;
         }
     }
 }
