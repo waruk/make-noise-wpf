@@ -1,6 +1,5 @@
 ﻿/* Requirements:
  * 
- * Configurable sound library: check if media file is available at startup
  * Timer interval needs to be random intre 1h - 1h30
  * play just a predefined length of the audio file (10 secs)
  * 

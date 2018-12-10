@@ -9,7 +9,7 @@ namespace Noise
     {
         public QuietTime QuietHours { get; set; }
 
-        private const string SOUND1 = @".\Sounds\Icebraker.mp3";
+        private const string SOUND1 = @".\Sounds\icebraker.mp3";
         private const int PLAY_DURATION = 60;
 
         private static Random rnd = new Random();
@@ -33,12 +33,14 @@ namespace Noise
 
             playIntervalTimer.Tick += playIntervalTimer_Tick;
             playIntervalTimer.Interval = TimeSpan.FromSeconds(5);
-            //playIntervalTimer.Interval = TimeSpan.FromMinutes(120);
             playIntervalTimer.Start();
         }
 
         private void playIntervalTimer_Tick(object sender, EventArgs e)
         {
+            if (isMediaPlaying)
+                return;
+
             // check if we're allowed to play
             DateTime currentTime = DateTime.Now;
             if (QuietHours.IsInsideQuietTimeInterval(currentTime))
@@ -79,14 +81,15 @@ namespace Noise
 
         private void ResetPlayInterval()
         {
-            playIntervalTimer.Interval = TimeSpan.FromSeconds(10);
+            playIntervalTimer.Interval = GetNextPlayTime()
+;
             playDurationTimer.Stop();
-            logger.Info("Media will be started again after 10 seconds.");
+            logger.Info(String.Format("Media will be started again after {0} minutes.", playIntervalTimer.Interval.TotalMinutes.ToString()));
         }
 
         private TimeSpan GetNextPlayTime()
         {
-            int minutes = rnd.Next(60, 91);
+            int minutes = rnd.Next(35, 91);
             TimeSpan timeBetweenMediaPlay = TimeSpan.FromMinutes(minutes);
 
             return timeBetweenMediaPlay;
