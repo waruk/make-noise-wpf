@@ -1,6 +1,6 @@
 # Next development:
 
-ASP.NET core:
+## ASP.NET core:
 - create webservice: ControlCenter project
 - Method GetConfiguration()
 	- returns configuration parameters for WPF app (on/off, and the rest)
@@ -9,7 +9,7 @@ ASP.NET core:
 - Method AudioPlayerStatus()
 	- receives on/off status of the AudioPlayer 
 
-WPF app:
+## WPF app:
 class NoiseService()
 - communicates with webservice (communication should be async)
 - web service is called on a different timer when retriving configuration
