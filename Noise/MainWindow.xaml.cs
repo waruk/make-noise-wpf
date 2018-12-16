@@ -1,20 +1,4 @@
-﻿/* Requirements:
- * 
- * Timer interval needs to be random intre 1h - 1h30
- * play just a predefined length of the audio file (10 secs)
- * 
- * 
- * Sounds to play: starship, train, icebraker, youtube creator sound effects
- * 
- * 
- * LATER: 
- * ControlCenter: WebApi + pagina web de configurare si vizualizare current status si log
- * Report running status to web api service
- * Gets configuration from WebApi:  On/off, noise hours, sounds to play; communication should be async
- * 
- * */
-
-using System;
+﻿using System;
 using System.Configuration;
 using System.Windows;
 using NLog;
@@ -38,6 +22,7 @@ namespace Noise
             InitializeComponent();
             
             logger.Info("App started.");
+            Title = String.Format("Make Me Some Noise - v{0}", GetAppVersion());
         }
 
         private void BtnStartPlayer_Click(object sender, RoutedEventArgs e)
@@ -96,6 +81,15 @@ namespace Noise
             logger.Info("Configuration loaded from file.");
 
             return playerConfiguration;
+        }
+
+        private string GetAppVersion()
+        {
+            Version version = null;
+
+            version = System.Reflection.Assembly.GetEntryAssembly().GetName().Version;
+
+            return String.Format("{0}.{1}", version.Major, version.Minor);
         }
     }
 }

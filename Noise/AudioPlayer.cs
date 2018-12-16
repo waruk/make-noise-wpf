@@ -68,7 +68,7 @@ namespace Noise
 
         private void MediaPlayer_MediaEnded(object sender, EventArgs e)
         {
-            logger.Info("Media ended.");
+            logger.Info("Entire file played.");
             isMediaPlaying = false;
             ResetPlayInterval();
         }
@@ -78,7 +78,7 @@ namespace Noise
             playIntervalTimer.Interval = GetNextPlayTime()
 ;
             playDurationTimer.Stop();
-            logger.Info(String.Format("Play again in [{0}] minutes.", playIntervalTimer.Interval.TotalMinutes.ToString()));
+            //logger.Info(String.Format("Play again in [{0}] minutes.", playIntervalTimer.Interval.TotalMinutes.ToString()));
         }
 
         private TimeSpan GetNextPlayTime()
