@@ -1,0 +1,30 @@
+﻿body {
+    margin: 0, auto;
+    padding: 20px;
+}
+#player-status {
+    font-weight: bold;
+    font-family: Verdana;
+}
+#player-controls {
+    margin: 25px auto;
+    width: 140px;
+    height: 64px;
+}
+#player-log {
+    font-family: 'Lucida Sans Unicode';
+    font-size: 12px;
+    background-color: beige;
+    padding: 10px;
+    border: 5px;
+    border-radius: 10px;
+    margin: 10px;
+}
+
+.hide-player-button {
+    display: none;
+}
+
+.show-player-button {
+    display: block;
+}
