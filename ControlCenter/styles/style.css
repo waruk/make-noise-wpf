@@ -1,15 +1,9 @@
 ﻿body {
-    margin: 0, auto;
     padding: 20px;
-}
-#player-status {
-    font-weight: bold;
     font-family: Verdana;
 }
-#player-controls {
-    margin: 25px auto;
-    width: 140px;
-    height: 64px;
+div {
+    padding: 15px;
 }
 #player-log {
     font-family: 'Lucida Sans Unicode';
@@ -19,12 +13,13 @@
     border: 5px;
     border-radius: 10px;
     margin: 10px;
+    overflow-y: scroll;
+    height: 200px;
 }
 
-.hide-player-button {
-    display: none;
+.bold-red-text {
+    font-weight: bold;
+    color: darkred;
 }
 
-.show-player-button {
-    display: block;
-}
+
