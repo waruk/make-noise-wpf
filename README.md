@@ -1,6 +1,7 @@
 # Next development:
 
 ## ASP .NET Core:
+- Complete Pluralsight API course
 - create webservice: ControlCenter project
 - Method GetConfiguration()
 	- returns configuration parameters: on/off, play interval (min, max), sound libray
@@ -10,14 +11,15 @@
 	- receives on/off status of the AudioPlayer 
 
 ## AudioPlayer web app:
-- a port to web of the WPF app
+- sound file should be configurable
 - sends logging to webservice
+- JavaScript course: https://developer.mozilla.org/en-US/docs/Learn/JavaScript
 
 
 # Features to implement:
 - Night mode (on/off, plays a different sound)
 - Add more sounds to library (train, from youtube sound effects: squeeky door, dog barking)
-- Dashboard: angularJS: pagina web de configurare si vizualizare current status si log
+- Implement AudioPlayer web + Dashboard/Configuration in AngularJs
 
 # Possible features:
 - SignalR: Bi directional communication between AudioPlayer and WebAPI?
