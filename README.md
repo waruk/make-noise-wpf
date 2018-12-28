@@ -11,6 +11,7 @@
 	- receives on/off status of the AudioPlayer 
 
 ## AudioPlayer web app:
+- deploy to Azure
 - sound file should be configurable
 - sends logging to webservice
 - JavaScript course: https://developer.mozilla.org/en-US/docs/Learn/JavaScript
