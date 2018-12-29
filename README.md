@@ -14,7 +14,7 @@
 - deploy to Azure
 - sound file should be configurable
 - sends logging to webservice
-- JavaScript course: https://developer.mozilla.org/en-US/docs/Learn/JavaScript
+- JavaScript course: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide
 
 
 # Features to implement:
