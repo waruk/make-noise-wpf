@@ -1,8 +1,10 @@
 ﻿var playIntervalId;
 var playLengthId;
-var minIntervalValue;
-var maxIntervalValue;
-var maxLengthToPlay;
+var minIntervalValue = 5;
+var maxIntervalValue = 45;
+var maxLengthToPlay = 60;
+var mediaFile = "sounds/starship.mp3"
+var isMediaPlaying;
 
 
 function logInfo(message, important) {
@@ -28,6 +30,7 @@ function readConfiguration() {
     minIntervalValue = parseInt(document.getElementById("min-value").value);
     maxIntervalValue = parseInt(document.getElementById("max-value").value);
     maxLengthToPlay = parseInt(document.getElementById("max-length").value);
+    mediaFile = document.getElementById("media-file").value;
     if (Number.isInteger(minIntervalValue) && Number.isInteger(maxIntervalValue) && Number.isInteger(maxLengthToPlay)) {
         return true;
     }
@@ -82,10 +85,12 @@ function stopButtonClick() {
     audioElem = document.getElementById("audio-elem");
     audioElem.pause();
     audioElem.currentTime = 0;
+    isMediaPlaying = false;
     logInfo("AudioPlayer stopped.", true);
 }
 
 function audioEnded() {
+    isMediaPlaying = false;
     logInfo("Playback ended.");
     scheduleNextPlay();
 }
