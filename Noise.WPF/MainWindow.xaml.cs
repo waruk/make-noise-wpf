@@ -3,19 +3,18 @@ using System.Configuration;
 using System.Windows;
 using NLog;
 
-namespace Noise
+namespace Noise.WPF
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        private const string SOUND_LIB_DIR = @".\Sounds\";
+        private const string SOUND_LIB_DIR = @".\sounds\";
+        private AudioPlayer audioPlayer;
 
         // initialise logger
         private static Logger logger = LogManager.GetCurrentClassLogger();
-        private AudioPlayer audioPlayer;
-        private bool isPlayerStarted = false;
 
         public MainWindow()
         {
@@ -27,13 +26,12 @@ namespace Noise
 
         private void BtnStartPlayer_Click(object sender, RoutedEventArgs e)
         {
-            if (isPlayerStarted)
+            if (audioPlayer != null && audioPlayer.IsRunning)
             {
                 audioPlayer.Dispose();
                 audioPlayer = null;
                 logger.Info("Audio player stopped");
                 btnStartPlayer.Content = FindResource("StartButton");
-                isPlayerStarted = false;
 
                 return;
             }
@@ -46,7 +44,6 @@ namespace Noise
                 audioPlayer.Start(config);
                 logger.Info("Audio player started");
 
-                isPlayerStarted = true;
                 btnStartPlayer.Content = FindResource("StopButton");
             }
             catch (Exception ex)
@@ -68,7 +65,10 @@ namespace Noise
         private PlayerConfiguration LoadPlayerConfiguration()
         {
             PlayerConfiguration playerConfiguration = new PlayerConfiguration();
-            
+
+            // reload app.config from disk
+            ConfigurationManager.RefreshSection("appSettings");
+
             TimeSpan quietTimeFrom = TimeSpan.Parse(ConfigurationManager.AppSettings["QuietHoursFrom"]);
             TimeSpan quietTimeTo = TimeSpan.Parse(ConfigurationManager.AppSettings["QuietHoursTo"]);
             playerConfiguration.QuietHours = new QuietTime(quietTimeFrom, quietTimeTo);
@@ -79,6 +79,12 @@ namespace Noise
             playerConfiguration.AudioFile = new Uri(SOUND_LIB_DIR + ConfigurationManager.AppSettings["Filename"], UriKind.Relative);
 
             logger.Info("Configuration loaded from file.");
+            logger.Info(String.Format("{0} / Play interval: {1} - {2} / Play max length: {3} / Filename: {4}", 
+                playerConfiguration.QuietHours.ToString(),
+                playerConfiguration.PlayAgainAfterMin,
+                playerConfiguration.PlayAgainAfterMax,
+                playerConfiguration.PlayTime,
+                playerConfiguration.AudioFile.OriginalString));
 
             return playerConfiguration;
         }

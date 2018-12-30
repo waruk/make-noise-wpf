@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Noise
+namespace Noise.WPF
 {
     public class QuietTime
     {
@@ -23,6 +23,11 @@ namespace Noise
                 isInsideInterval = true;
 
             return isInsideInterval;
+        }
+
+        public override string ToString()
+        {
+            return String.Format("Quiet Time: {0} - {1}", from.ToString(), to.ToString());
         }
 
     }

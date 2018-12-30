@@ -3,10 +3,16 @@ using System;
 using System.Windows.Media;
 using System.Windows.Threading;
 
-namespace Noise
+namespace Noise.WPF
 {
     public class AudioPlayer : IDisposable
     {
+        private bool isRunning = false;
+        public bool IsRunning
+        {
+            get { return isRunning; }
+        }
+
         private PlayerConfiguration config { get; set; }
         private static Random rnd = new Random();
         private static Logger logger = LogManager.GetCurrentClassLogger();
@@ -32,6 +38,7 @@ namespace Noise
             playIntervalTimer.Tick += playIntervalTimer_Tick;
             playIntervalTimer.Interval = TimeSpan.FromSeconds(3);  // start to play immediately so we can test the sound volume
             playIntervalTimer.Start();
+            this.isRunning = true;
         }
 
         private void playIntervalTimer_Tick(object sender, EventArgs e)
@@ -91,6 +98,7 @@ namespace Noise
 
         public void Dispose()
         {
+            mediaPlayer.Stop();
             mediaPlayer.MediaEnded -= MediaPlayer_MediaEnded;
             playIntervalTimer.Tick -= playIntervalTimer_Tick;
             playDurationTimer.Tick -= playDurationTimer_Tick;

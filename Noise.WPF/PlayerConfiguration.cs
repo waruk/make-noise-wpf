@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Noise
+namespace Noise.WPF
 {
     public class PlayerConfiguration
     {
