@@ -1,8 +1,8 @@
 # Next development:
 
 ## ASP .NET Core:
-- Complete Pluralsight API course
-- create webservice: ControlCenter project
+- create webservice: ControlCenter project (WEB API)
+- GetMediaFiles(): returns all available audio files from dir /sounds (client displays them in a list)
 - Method GetConfiguration()
 	- returns configuration parameters: on/off, play interval (min, max), sound libray
 - Method LogMessage()
