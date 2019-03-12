@@ -1,10 +1,11 @@
-﻿var playIntervalId;
-var playLengthId;
-var minIntervalValue = 5;
-var maxIntervalValue = 45;
-var maxLengthToPlay = 60;
-var mediaFile = "sounds/starship.mp3"
-var isMediaPlaying;
+﻿const minIntervalValue = 5;
+const maxIntervalValue = 45;
+const maxLengthToPlay = 60;
+const mediaFile = "sounds/starship.mp3"
+
+let playIntervalId;
+let playLengthId;
+let isMediaPlaying;
 
 
 function logInfo(message, important) {
