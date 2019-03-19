@@ -1,8 +1,3 @@
-## JS
-
-
-## WPF
-
 class Scheduler
 - scheduleNextMediaPlay
 - quietHours
