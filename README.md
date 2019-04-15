@@ -1,6 +1,6 @@
 class Scheduler
 - scheduleNextMediaPlay
-- quietHours
+- define multiple noise intervals rather than quiet hours
 - play short sound every x random seconds within time interval
 - create multiple schedulers with different sound each (night mode isn't needed anymore)  
 
