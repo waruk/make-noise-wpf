@@ -5,8 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Noise_v2"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="MainWindow" Height="450" Width="800" Closed="Window_Closed">
+    <Window.Resources>
+        <Image x:Key="StartButton" Source=".\images\play-button.png" />
+        <Image x:Key="StopButton" Source=".\images\stop-button.png" />
+    </Window.Resources>
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*" />
+            <ColumnDefinition Width="*" />
+        </Grid.ColumnDefinitions>
+        <Button Name="btnStartPlayer" Grid.Column="0" 
+                Height="75" Width="75"
+                Content="{StaticResource StartButton}" 
+                Click="BtnStartPlayer_Click" />
     </Grid>
 </Window>

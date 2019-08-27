@@ -1,35 +1,35 @@
-﻿using System;
+﻿using Noise_v2.Entities;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Noise_v2.Entities;
-using Newtonsoft.Json.Serialization;
 
 namespace Noise_v2.Services
 {
     public class Repository : IRepository
     {
-        List<NoiseInterval> _data = new List<NoiseInterval>();
+        private DataContext _dataContext;
+
+        public Repository(DataContext dataContext)
+        {
+            _dataContext = dataContext;
+        }
 
         public void AddNoiseInterval(NoiseInterval noiseInterval)
         {
-            _data.Add(noiseInterval);
+            _dataContext.NoiseIntervals.Add(noiseInterval);
         }
 
         public void DeleteNoiseInterval(NoiseInterval noiseInterval)
         {
-            _data.RemoveAll(ni => ni.NoiseIntervalId == noiseInterval.NoiseIntervalId);
+            _dataContext.NoiseIntervals.RemoveAll(ni => ni.NoiseIntervalId == noiseInterval.NoiseIntervalId);
         }
 
         public IEnumerable<NoiseInterval> GetNoiseIntervals()
         {
-            throw new NotImplementedException();
+            return _dataContext.NoiseIntervals;
         }
 
         public bool Save()
         {
-            throw new NotImplementedException();
+            return (_dataContext.Save());
         }
     }
 }
