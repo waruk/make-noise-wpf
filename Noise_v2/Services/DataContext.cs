@@ -16,7 +16,6 @@ namespace Noise_v2.Services
         public DataContext()
         {
             dataFile = System.AppDomain.CurrentDomain.BaseDirectory + STORE_FILENAME;
-            this.NoiseIntervals = Load().ToList();
         }
 
         public bool Save()
@@ -28,7 +27,7 @@ namespace Noise_v2.Services
             return true;
         }
 
-        private IEnumerable<NoiseInterval> Load()
+        public IEnumerable<NoiseInterval> LoadData()
         {
             List<NoiseInterval> noiseIntervals = new List<NoiseInterval>();
             if (File.Exists(dataFile))

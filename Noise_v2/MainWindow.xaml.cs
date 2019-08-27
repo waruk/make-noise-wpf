@@ -25,54 +25,40 @@ namespace Noise_v2
     {
         // initialise logger
         private static Logger logger = LogManager.GetCurrentClassLogger();
+        private SchedulerService scheduler;
+        private DataContext dataContext;
+        private IRepository noiseRepository;
 
         public MainWindow()
         {
             InitializeComponent();
 
-            logger.Info("App started.");
             Title = String.Format("Make Me Some Noise - v{0}", GetAppVersion());
-
-            // test code follows:
-            DataContext dataContext = new DataContext();
-            IRepository noiseRepo = new Repository(dataContext);
-            NoiseInterval noise1 = new NoiseInterval
-            {
-                NoiseIntervalId = 1,
-                TimeFrom = new TimeSpan(9, 0, 0),
-                TimeTo = new TimeSpan(10, 25, 0),
-                FrequencyMin = 4,
-                FrequencyMax = 22,
-                AudioFile = "starship.mp3",
-                Active = true
-            };
-
-            NoiseInterval noise2 = new NoiseInterval
-            {
-                NoiseIntervalId = 2,
-                TimeFrom = new TimeSpan(22, 10, 0),
-                TimeTo = new TimeSpan(23, 59, 0),
-                FrequencyMin = 1,
-                FrequencyMax = 18,
-                AudioFile = "train.mp3",
-                Active = false
-            };
-
-
-            noiseRepo.AddNoiseInterval(noise1);
-            noiseRepo.AddNoiseInterval(noise2);
-            noiseRepo.Save();
-
+            dataContext = new DataContext();
+            noiseRepository = new Repository(dataContext);
         }
 
         private void BtnStartPlayer_Click(object sender, RoutedEventArgs e)
-        { }
-
-            private void Window_Closed(object sender, EventArgs e)
         {
-            logger.Info("App is shutting down.");
-            //if (audioPlayer != null)
-            //    audioPlayer.Dispose();
+            if (scheduler != null && scheduler.Started)
+            {
+                scheduler.Stop();
+                scheduler = null;
+                btnStartPlayer.Content = FindResource("StartButton");
+
+                return;
+            }
+
+            // read data from file again
+            dataContext.LoadData();
+            scheduler = new SchedulerService(noiseRepository.GetNoiseIntervals().ToList());
+            btnStartPlayer.Content = FindResource("StopButton");
+        }
+
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            if (scheduler != null)
+                scheduler.Stop();
             LogManager.Shutdown(); // Flush and close down internal threads and timers
         }
 
