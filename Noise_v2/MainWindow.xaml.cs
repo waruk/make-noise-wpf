@@ -49,7 +49,7 @@ namespace Noise_v2
                 return;
             }
 
-            // read data from file again
+            // read data from file so intervals can be changed without restarting the app
             dataContext.LoadData();
             scheduler = new SchedulerService(noiseRepository.GetNoiseIntervals().ToList());
             btnStartPlayer.Content = FindResource("StopButton");

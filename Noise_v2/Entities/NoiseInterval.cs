@@ -11,5 +11,6 @@ namespace Noise_v2.Entities
         public int FrequencyMax { get; set; }
         public string AudioFile { get; set; }
         public bool Active { get; set; }
+        public double Volume { get; set; }
     }
 }
