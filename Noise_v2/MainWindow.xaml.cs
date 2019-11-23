@@ -14,7 +14,6 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using Noise_v2.Services;
 using Noise_v2.Entities;
-using NLog;
 
 namespace Noise_v2
 {
@@ -24,7 +23,6 @@ namespace Noise_v2
     public partial class MainWindow : Window
     {
         // initialise logger
-        private static Logger logger = LogManager.GetCurrentClassLogger();
         private SchedulerService scheduler;
         private DataContext dataContext;
         private IRepository noiseRepository;
@@ -59,7 +57,6 @@ namespace Noise_v2
         {
             if (scheduler != null)
                 scheduler.Stop();
-            LogManager.Shutdown(); // Flush and close down internal threads and timers
         }
 
         private string GetAppVersion()
